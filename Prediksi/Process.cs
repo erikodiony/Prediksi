@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Data;
 using System.Windows.Forms;
@@ -17,6 +14,7 @@ namespace Prediksi
         MySqlDataAdapter adapter;
         DataTable dt;
 
+        #region Function Database
         public bool Koneksi()
         {
             try
@@ -26,13 +24,12 @@ namespace Prediksi
                 conn.Open();
                 return true;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 conn.Close();
                 return false;
             }
         }
-
         public DataTable SELECT_DB(string cat, bool type)
         {
             if (Koneksi() == true)
@@ -91,7 +88,6 @@ namespace Prediksi
                 return null;
             }
         }
-
         public void INSERT_DB(string tgl, string jml, string cat)
         {
             if (Koneksi() == true)
@@ -137,60 +133,20 @@ namespace Prediksi
                 ShowMessageBox(Attr_MBox.title_Err, Attr_MBox.Err_ConnDB);
             }
         }
+        #endregion
 
-        public void Count_SES()
-        {
-            Count_SES_Prediksi();
-            Count_SES_MAD();
-        }
-
-        public void Count_LS()
-        {
-            Count_LS_X();
-            Count_LS_Xpangkat2();
-            Count_LS_XY();
-            Count_LS_Y();
-            Count_LS_AB();
-
-            Count_LS_X2();
-            Count_LS_Y2();
-            Count_LS_Prediksi();
-            Count_LS_MAD();
-        }
-
-        public void ShowMessageBox(string title, string msg)
-        {
-            MessageBox.Show(msg, title);
-        }
-
-        public string SetValueComboBox(string val)
-        {
-            if (val == "5")
-            {
-                return "lima";
-            }
-            else if (val == "10")
-            {
-                return "sepuluh";
-            }
-            else
-            {
-                return "duapuluh";
-            }
-        }
-
+        #region Function SES
         public void Count_SES_Prediksi()
         {
             double[] temp = new double[Result.Data_Jml.Length];
             temp[0] = Result.Data_Jml[0];
             for (int i = 1; i < Result.Data_Jml.Length; i++)
             {
-                temp[i] = Math.Ceiling(temp[i - 1] + 0.1 * (Result.Data_Jml[i - 1] - temp[i - 1]));                
+                temp[i] = Math.Ceiling(temp[i - 1] + 0.1 * (Result.Data_Jml[i - 1] - temp[i - 1]));
             }
 
             Result.Data_SES_Prediksi = temp;
         }
-
         public void Count_SES_MAD()
         {
             double[] temp = new double[Result.Data_Jml.Length];
@@ -202,7 +158,6 @@ namespace Prediksi
             Result.Data_SES_MAD = temp;
             Result.Data_SES_MAD_Rerata = Math.Round((temp.Sum() / temp.Length), 2);
         }
-
         public void Count_SES_MinMax()
         {
             double res;
@@ -217,35 +172,43 @@ namespace Prediksi
             temp = new double[3] { res, res_min, res_max };
             Result.Hasil_Prediksi = temp;
         }
+        #endregion
 
-        public void Count_LS_Y()
+        #region Function LS
+        public double[] Count_LS_TimeSeries_A(double[] temp, int div)
         {
-            if (Result.Data_Jml.Length % 2 == 0)
+            int inc = 0;
+            for (int i = -div; i < 0; i++)
             {
-                double[] temp = new double[Result.Data_Jml.Length / 2];
-
-                int inc = 0;
-                foreach (var x in temp)
-                {
-                    temp[inc] = Result.Data_Jml[inc];
-                    inc++;
-                }
-                Result.Data_LS_Y = temp;
+                temp[inc] = i;
+                inc++;
             }
-            else
+
+            int inc2 = div;
+            for (int i = 1; i <= div; i++)
             {
-                double[] temp = new double[(Result.Data_Jml.Length + 1) / 2];
-
-                int inc = 0;
-                foreach (var x in temp)
-                {
-                    temp[inc] = Result.Data_Jml[inc];
-                    inc++;
-                }
-                Result.Data_LS_Y = temp;
+                temp[inc2] = i;
+                inc2++;
             }
+            return temp;
         }
+        public double[] Count_LS_TimeSeries_B(double[] temp, int div)
+        {
+            int inc = 0;
+            for (int i = -div; i <= 0; i++)
+            {
+                temp[inc] = i;
+                inc++;
+            }
 
+            int inc2 = div + 1;
+            for (int i = 1; i <= div; i++)
+            {
+                temp[inc2] = i;
+                inc2++;
+            }
+            return temp;
+        }
         public void Count_LS_X()
         {
             if (Result.Data_Jml.Length % 2 == 0)
@@ -285,43 +248,6 @@ namespace Prediksi
                 Result.PointTimeSeries = div;
             }
         }
-
-        public double[] Count_LS_TimeSeries_A(double[] temp, int div)
-        {
-            int inc = 0;
-            for (int i = -div; i < 0; i++)
-            {
-                temp[inc] = i;
-                inc++;
-            }
-
-            int inc2 = div;
-            for (int i = 1; i <= div; i++)
-            {
-                temp[inc2] = i;
-                inc2++;
-            }
-            return temp;
-        }
-
-        public double[] Count_LS_TimeSeries_B(double[] temp, int div)
-        {
-            int inc = 0;
-            for (int i = -div; i <= 0; i++)
-            {
-                temp[inc] = i;
-                inc++;
-            }
-
-            int inc2 = div + 1;
-            for (int i = 1; i <= div; i++)
-            {
-                temp[inc2] = i;
-                inc2++;
-            }
-            return temp;
-        }
-
         public void Count_LS_Xpangkat2()
         {
             double[] temp = new double[Result.Data_LS_X.Length];
@@ -334,7 +260,6 @@ namespace Prediksi
             }
             Result.Data_LS_Xpangkat2 = temp;
         }
-
         public void Count_LS_XY()
         {
             double[] temp = new double[Result.Data_LS_X.Length];
@@ -345,7 +270,33 @@ namespace Prediksi
             }
             Result.Data_LS_XY = temp;
         }
+        public void Count_LS_Y()
+        {
+            if (Result.Data_Jml.Length % 2 == 0)
+            {
+                double[] temp = new double[Result.Data_Jml.Length / 2];
 
+                int inc = 0;
+                foreach (var x in temp)
+                {
+                    temp[inc] = Result.Data_Jml[inc];
+                    inc++;
+                }
+                Result.Data_LS_Y = temp;
+            }
+            else
+            {
+                double[] temp = new double[(Result.Data_Jml.Length + 1) / 2];
+
+                int inc = 0;
+                foreach (var x in temp)
+                {
+                    temp[inc] = Result.Data_Jml[inc];
+                    inc++;
+                }
+                Result.Data_LS_Y = temp;
+            }
+        }
         public void Count_LS_AB()
         {
             Result.SUM_Data_LS_Y = Result.Data_LS_Y.Sum();
@@ -356,18 +307,17 @@ namespace Prediksi
             Result.Data_LS_A = Result.SUM_Data_LS_Y / Result.Data_LS_Y.Length;
             Result.Data_LS_B = Result.SUM_Data_LS_XY / Result.SUM_Data_LS_Xpangkat2;
         }
-
-        public void Count_LS_Prediksi()
+        public void Count_LS_X2()
         {
             double[] temp = new double[Result.Data_Jml.Length - Result.Data_LS_X.Length];
-
+            int val = Result.PointTimeSeries + 1;
             for (int i = 0; i < (Result.Data_Jml.Length - Result.Data_LS_X.Length); i++)
             {
-                temp[i] = Math.Ceiling(Result.Data_LS_A + (Result.Data_LS_B * Result.Data_LS_X2[i]));
+                temp[i] = Convert.ToDouble(val);
+                val++;
             }
-            Result.Data_LS_Prediksi = temp;
+            Result.Data_LS_X2 = temp;
         }
-
         public void Count_LS_Y2()
         {
             double[] temp = new double[Result.Data_Jml.Length - Result.Data_LS_X.Length];
@@ -380,7 +330,16 @@ namespace Prediksi
             }
             Result.Data_LS_Y2 = temp;
         }
+        public void Count_LS_Prediksi()
+        {
+            double[] temp = new double[Result.Data_Jml.Length - Result.Data_LS_X.Length];
 
+            for (int i = 0; i < (Result.Data_Jml.Length - Result.Data_LS_X.Length); i++)
+            {
+                temp[i] = Math.Ceiling(Result.Data_LS_A + (Result.Data_LS_B * Result.Data_LS_X2[i]));
+            }
+            Result.Data_LS_Prediksi = temp;
+        }
         public void Count_LS_MAD()
         {
             double[] temp = new double[Result.Data_Jml.Length - Result.Data_LS_X.Length];
@@ -391,21 +350,8 @@ namespace Prediksi
             }
 
             Result.Data_LS_MAD = temp;
-            Result.Data_LS_MAD_Rerata = Math.Round((Result.Data_LS_MAD.Sum() / Result.Data_LS_MAD.Length),2);
+            Result.Data_LS_MAD_Rerata = Math.Round((Result.Data_LS_MAD.Sum() / Result.Data_LS_MAD.Length), 2);
         }
-
-        public void Count_LS_X2()
-        {
-            double[] temp = new double[Result.Data_Jml.Length - Result.Data_LS_X.Length];
-            int val = Result.PointTimeSeries + 1;
-            for (int i = 0; i < (Result.Data_Jml.Length - Result.Data_LS_X.Length); i++)
-            {
-                temp[i] = Convert.ToDouble(val);
-                val++;
-            }
-            Result.Data_LS_X2 = temp;
-        }
-
         public void Count_LS_MinMax()
         {
             double res;
@@ -420,6 +366,48 @@ namespace Prediksi
 
             temp = new double[3] { res, res_min, res_max };
             Result.Hasil_Prediksi = temp;
+        }
+        #endregion
+
+        #region Other
+        public void ShowMessageBox(string title, string msg)
+        {
+            MessageBox.Show(msg, title);
+        }
+        public string SetValueComboBox(string val)
+        {
+            if (val == "5")
+            {
+                return "lima";
+            }
+            else if (val == "10")
+            {
+                return "sepuluh";
+            }
+            else
+            {
+                return "duapuluh";
+            }
+        }
+        #endregion
+
+        public void Count_SES()
+        {
+            Count_SES_Prediksi();
+            Count_SES_MAD();
+        }
+        public void Count_LS()
+        {
+            Count_LS_X();
+            Count_LS_Xpangkat2();
+            Count_LS_XY();
+            Count_LS_Y();
+            Count_LS_AB();
+
+            Count_LS_X2();
+            Count_LS_Y2();
+            Count_LS_Prediksi();
+            Count_LS_MAD();
         }
     }
 }

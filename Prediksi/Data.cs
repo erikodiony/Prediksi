@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Prediksi
 {
@@ -59,11 +54,5 @@ namespace Prediksi
             public static readonly string OK_UpdateDB = "Data berhasil di update !";
             public static readonly string OK_DeleteDB = "Data berhasil di hapus !";
         }
-
-        public void Count_SES_MAD()
-        {
-
-        }
-
     }
 }

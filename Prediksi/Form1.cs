@@ -67,7 +67,10 @@ namespace Prediksi
             ShowResult(proc.SetValueComboBox(cmb_cat1.SelectedItem.ToString()));
             lbl_nilai_mad.Text = string.Format("PREDIKSI (Pulsa {3}) :{0}{0}Metode SES : {1} | Metode LS : {2}", Environment.NewLine, Result.Data_SES_MAD_Rerata, Result.Data_LS_MAD_Rerata, cmb_cat1.SelectedItem.ToString());
             lbl_mad.Text = string.Format("Metode yang dipakai adalah : {0}", Result.Winner);
-            lbl_hasil.Text = string.Format("Hasil Prediksi hari berikutnya :{0}{0}Prediksi: {1} | (Min: {2} | Max: {3})", Environment.NewLine, Result.Hasil_Prediksi[0], Result.Hasil_Prediksi[1], Result.Hasil_Prediksi[2]);
+            if (Result.Hasil_Prediksi != null)
+            {
+                lbl_hasil.Text = string.Format("Hasil Prediksi hari berikutnya :{0}{0}Prediksi: {1} | (Min: {2} | Max: {3})", Environment.NewLine, Result.Hasil_Prediksi[0], Result.Hasil_Prediksi[1], Result.Hasil_Prediksi[2]);
+            }
         }
 
         private void btn_Reset_Click(object sender, EventArgs e)

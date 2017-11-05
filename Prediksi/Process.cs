@@ -82,7 +82,6 @@ namespace Prediksi
                         Result.Winner = "SES";
                         Count_SES_MinMax();
                     }
-                    System.Diagnostics.Debug.WriteLine(string.Format("SES: {0} | LS: {1}", Result.Data_SES_MAD_Rerata, Result.Data_LS_MAD_Rerata));
                 }
                 return dt;
             }
@@ -101,8 +100,7 @@ namespace Prediksi
                 cmd = new MySqlCommand(command, conn);
                 cmd.ExecuteNonQuery();
                 conn.Close();
-                ShowMessageBox(Attr_MBox.title_OK, Attr_MBox.OK_InsertDB);
-                
+                ShowMessageBox(Attr_MBox.title_OK, Attr_MBox.OK_InsertDB);                
             }
             else
             {
@@ -246,14 +244,6 @@ namespace Prediksi
                 }
                 Result.Data_LS_Y = temp;
             }
-
-            foreach(var x in Result.Data_LS_Y)
-            {
-                //System.Diagnostics.Debug.WriteLine(x);
-            }
-
-            //System.Diagnostics.Debug.WriteLine(Result.Data_LS_Y.Length);
-
         }
 
         public void Count_LS_X()
@@ -311,14 +301,6 @@ namespace Prediksi
                 temp[inc2] = i;
                 inc2++;
             }
-
-            //System.Diagnostics.Debug.WriteLine(string.Format("------------ {0}", Result.Data_Jml.Length));
-            foreach (var x in temp)
-            {
-                //System.Diagnostics.Debug.WriteLine(x);
-            }
-            //System.Diagnostics.Debug.WriteLine("------------");
-
             return temp;
         }
 
@@ -337,14 +319,6 @@ namespace Prediksi
                 temp[inc2] = i;
                 inc2++;
             }
-
-            //System.Diagnostics.Debug.WriteLine(string.Format("------------ {0}", Result.Data_Jml.Length));
-            foreach (var x in temp)
-            {
-                //System.Diagnostics.Debug.WriteLine(x);
-            }
-            //System.Diagnostics.Debug.WriteLine("------------");
-
             return temp;
         }
 
@@ -447,6 +421,5 @@ namespace Prediksi
             temp = new double[3] { res, res_min, res_max };
             Result.Hasil_Prediksi = temp;
         }
-
     }
 }

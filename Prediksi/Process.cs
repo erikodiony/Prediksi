@@ -200,7 +200,7 @@ namespace Prediksi
             }
 
             Result.Data_SES_MAD = temp;
-            Result.Data_SES_MAD_Rerata = temp.Sum() / temp.Length;
+            Result.Data_SES_MAD_Rerata = Math.Round((temp.Sum() / temp.Length), 2);
         }
 
         public void Count_SES_MinMax()
@@ -391,7 +391,7 @@ namespace Prediksi
             }
 
             Result.Data_LS_MAD = temp;
-            Result.Data_LS_MAD_Rerata = Result.Data_LS_MAD.Sum() / Result.Data_LS_MAD.Length;
+            Result.Data_LS_MAD_Rerata = Math.Round((Result.Data_LS_MAD.Sum() / Result.Data_LS_MAD.Length),2);
         }
 
         public void Count_LS_X2()
